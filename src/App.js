@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import './App.css';
+import * as Yup from 'yup';
 import { Form, TextField, SelectField, SubmitButton } from './FormElements';
 
 function App() {
@@ -10,6 +11,18 @@ function App() {
     name: "",
     email: "",
     role: ""
+  });
+
+  const FormSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Required')
+      .min(5, "Required"),
+    email: Yup.string().email()
+      .required('Required')
+      .min(1, "Required"),
+    role: Yup.string().oneOf(['admin', 'user'])
+      .required('Required')
+      .min(1, "Required"),
   });
 
   const onSubmit = (values, { setSubmitting, resetForm, setStatus }) => {
@@ -21,6 +34,7 @@ function App() {
     <div className="App">
       <Form
         enableReinitialize
+        validationSchema={FormSchema}
         initialValues={formData}
         onSubmit={onSubmit}
       >
